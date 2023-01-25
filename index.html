@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <title>PlantUML WASM</title>
+<script src="https://cjrtnc.leaningtech.com/2.3/loader.js"></script>
 <style type="text/css" media="screen">
     #editor { 
         position: absolute;
@@ -31,6 +32,8 @@
         function render(){
             document.getElementById("renderDiv").innerHTML = editor.getValue()
         }
+        ace.config.set("loadWorkerFromBlob", false)
+
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/javascript");
@@ -38,6 +41,9 @@
             render()
         });
         render()
+
+        cheerpjInit()
+        cheerpjRunMain("net.sourceforge.plantuml.Run", "/app/plantuml-1.2023.0.jar", "-help")
     </script>
 </body>
 </html>
