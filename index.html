@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>PlantUML WASM</title>
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 40%;
+    }
+    #renderDiv {
+        left: 45%;
+        position: absolute;
+    }
+</style>
+</head>
+<body>
+    <div id="editor">function foo(items) {
+        var x = "All this is syntax highlighted";
+        return x;
+    }</div>
+    <div id="renderDiv">
+    </div>
+    <script src="/ace/ace.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/ace/theme-monokai.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/ace/mode-javascript.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        function render(){
+            document.getElementById("renderDiv").innerHTML = editor.getValue()
+        }
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/javascript");
+        editor.session.on('change', function(delta) {
+            render()
+        });
+        render()
+    </script>
+</body>
+</html>
