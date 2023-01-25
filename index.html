@@ -30,6 +30,16 @@
     <script src="assets/js/theme-monokai.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="assets/js/mode-javascript.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
+        function debounce(func, delay = 300) {
+            let timerId;
+            return (...args) => {
+                clearTimeout(timerId);
+                timerId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+       
         function render(){
             cheerpjAddStringFile("/str/input.puml", editor.getValue());
             cheerpjRunMain("net.sourceforge.plantuml.Run", "/app/plantuml-1.2023.0.jar", "-Playout=smetana", "-o", "/files/", "/str/input.puml").then(() => {
@@ -38,13 +48,15 @@
                 })                
             })
         }
+        const processChange = debounce(() => render())
+
         ace.config.set("loadWorkerFromBlob", false)
 
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/javascript");
         editor.session.on('change', function(delta) {
-            render()
+            processChange()
         });
 
         cheerpjInit().then(() => {
