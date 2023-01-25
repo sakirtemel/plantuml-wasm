@@ -19,18 +19,24 @@
 </style>
 </head>
 <body>
-    <div id="editor">function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-    }</div>
+    <div id="editor">@startuml
+    Bob -> Alice: Hello!
+@enduml
+    </div>
     <div id="renderDiv">
+        <img id="renderedImage" />
     </div>
     <script src="assets/js/ace.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="assets/js/theme-monokai.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="assets/js/mode-javascript.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
         function render(){
-            document.getElementById("renderDiv").innerHTML = editor.getValue()
+            cheerpjAddStringFile("/str/input.puml", editor.getValue());
+            cheerpjRunMain("net.sourceforge.plantuml.Run", "/app/plantuml-1.2023.0.jar", "-o", "/files/", "/str/input.puml").then(() => {
+                window.cjFileBlob("input.png").then((blob) => {
+                    document.getElementById('renderedImage').src = window.URL.createObjectURL(blob)
+                })                
+            })
         }
         ace.config.set("loadWorkerFromBlob", false)
 
@@ -40,10 +46,10 @@
         editor.session.on('change', function(delta) {
             render()
         });
-        render()
 
-        cheerpjInit()
-        cheerpjRunMain("net.sourceforge.plantuml.Run", "/app/plantuml-1.2023.0.jar", "-help")
+        cheerpjInit().then(() => {
+            render()
+        })
     </script>
 </body>
 </html>
